@@ -1,29 +1,346 @@
 # writing-clone-starter
 
-A normalized public snapshot of the `writing-clone-starter` skill.
+`writing-clone-starter` 是一个给 **Claude Code / 兼容 Agent** 用的写作 skill。
 
-## Structure
+它解决的是一个很具体的问题：
 
-This repository intentionally keeps only two parts:
+你还没有自己的长期写作资产、没有成熟的个人 profile，也没有一堆可调用的人生素材，但你现在就想先写出一篇像样、可发、甚至带一点作者方向感的文章。
 
-1. `.claude/skills/writing-clone-starter/` — the skill itself
-2. `02_素材库/writing-clone-starter-material-library/` — the unified material library used by the skill
+这个仓库把这件事拆成了两部分：
 
-## Why this layout
+1. **skill 本体**：负责模式判断、原型路由、作者拟态、输出协议
+2. **统一素材库**：负责给 skill 提供它真正会读取的作者材料、证据、验证集和 provenance 账本
 
-The original private vault had starter materials scattered across inbox, project research, shared material libraries, and auxiliary agent files. This snapshot normalizes that dependency graph so the skill only depends on one material-library root.
+如果你只想知道一句话，这个仓库就是：
 
-## Main entry
+> **一个“先写出来”的写作 starter。默认能写强文章，也能按内置作者方向写；仓库拿到手后，用户和 Agent 都能直接安装。**
 
-- Skill entry: `.claude/skills/writing-clone-starter/SKILL.md`
-- Skill docs: `.claude/skills/writing-clone-starter/README.md`
-- Material library: `02_素材库/writing-clone-starter-material-library/README.md`
+---
 
-## Notes
+## 它适合谁
 
-- Built-in profiles remain at mixed maturity levels as documented in the skill files themselves
-- Maintenance modules such as profile-distillation and profile-probe are included
-- All external starter materials referenced by the skill have been normalized into the unified material library
+- 想先写出强文章，但自己还没有完整个人风格资产的人
+- 想体验“像某个作者方向写”是什么感觉的人
+- 正在用 Claude Code 或兼容 Agent 做内容创作的人
+- 想把 skill 和素材库一起交给 Agent 安装的人
+
+不适合下面这类场景：
+
+- 你已经有成熟的个人风格资产，只想继续“像自己写”
+- 你要的是长期个人 clone 系统，而不是 starter
+
+如果你属于后者，更接近的方向通常是 `writing-clone-profile`，不是这个仓库。
+
+---
+
+## 它能做什么
+
+### 1. 强文章模式
+
+这是默认模式。
+
+你不给作者名，它会优先判断这篇文章更适合走哪种原型，然后组织正文。
+
+当前内置 4 个强文章原型：
+
+- 观点拆解型
+- 方法教程型
+- 案例复盘型
+- 认知升级型
+
+这个模式的目标不是“像谁”，而是让文章本身站得住、结构清楚、能直接发。
+
+### 2. 高拟态模式
+
+你明确指定作者后，它会进入对应作者方向。
+
+当前内置作者：
+
+- Dan Koe
+- 粥左罗
+- Justin Welsh
+- 刘润
+- 梁宁
+- 薛辉
+
+它不是无条件硬装像。
+
+如果你的题目明显超出某个作者的原生议题带宽，skill 会自动降级回强文章模式，而不是硬凹一个假的作者稿。
+
+### 3. 维护者模块
+
+这个仓库还带了两组维护者用的模块：
+
+- `profile-distillation/`：新增或更新作者 profile
+- `profile-probe/`：做 blind probe、稳定性验证、评分
+
+普通用户不需要先理解这两块。它们主要服务维护和迭代。
+
+---
+
+## 仓库里有什么
+
+这个仓库现在故意只保留两大块，避免你拿到手以后看到一堆分散路径发懵。
+
+```text
+.
+├── .claude/
+│   └── skills/
+│       └── writing-clone-starter/
+│           ├── SKILL.md
+│           ├── README.md
+│           ├── evals/
+│           └── references/
+│               ├── runtime-closure.md
+│               ├── archetype-router.md
+│               ├── archetype-anti-bleed.md
+│               ├── archetype-evals.md
+│               ├── library-first-retrieval.md
+│               ├── evaluation/
+│               ├── content-archetypes/
+│               ├── built-in-profiles/
+│               ├── profile-distillation/
+│               └── profile-probe/
+└── 02_素材库/
+    └── writing-clone-starter-material-library/
+        ├── README.md
+        └── authors/
+            ├── dankoe/
+            ├── zhouzuoluo/
+            ├── justinwelsh/
+            ├── liurun/
+            ├── liangning/
+            └── xuehui/
+```
+
+你可以把它理解成：
+
+- `.claude/skills/writing-clone-starter/` 是大脑
+- `02_素材库/writing-clone-starter-material-library/` 是它会真正读取的材料层
+
+---
+
+## 你安装完以后，Agent 实际会读什么
+
+如果你只是正常使用这个 skill，最关键的入口是这几个文件：
+
+- `/.claude/skills/writing-clone-starter/SKILL.md`
+- `/.claude/skills/writing-clone-starter/README.md`
+- `/.claude/skills/writing-clone-starter/references/runtime-closure.md`
+- `/.claude/skills/writing-clone-starter/references/evaluation/`
+- `/.claude/skills/writing-clone-starter/references/content-archetypes/`
+- `/.claude/skills/writing-clone-starter/references/built-in-profiles/`
+- `/02_素材库/writing-clone-starter-material-library/README.md`
+
+如果你是维护者，再继续看：
+
+- `references/profile-distillation/`
+- `references/profile-probe/`
+
+---
+
+## 安装前提
+
+开始前，你至少需要下面这两个条件：
+
+1. 你有一个会被 Claude Code 或兼容 Agent 当作工作区的目录
+2. 这个工作区允许你创建下面两个相对路径
+
+```text
+.claude/skills/writing-clone-starter/
+02_素材库/writing-clone-starter-material-library/
+```
+
+最省心的安装方式，是**保持这两个路径原样**。
+
+你当然可以改路径，但那会引入额外适配工作。这个仓库默认已经把路径收口好了，直接照着放，摩擦最低。
+
+---
+
+## 安装方式 A：自己手动安装
+
+如果你打算自己装，按这个顺序做。
+
+### 第 1 步：拉下仓库
+
+```bash
+git clone https://github.com/zjp1997720/writing-clone-starter.git
+```
+
+### 第 2 步：把两块内容复制到你的工作区
+
+你真正需要复制的，只有这两块：
+
+```text
+.claude/skills/writing-clone-starter/
+02_素材库/writing-clone-starter-material-library/
+```
+
+如果你的工作区还没有 `.claude/skills/` 或 `02_素材库/`，直接创建即可。
+
+### 第 3 步：确认目录结构
+
+装完后，你的工作区至少应该长这样：
+
+```text
+<your-workspace>/
+├── .claude/
+│   └── skills/
+│       └── writing-clone-starter/
+└── 02_素材库/
+    └── writing-clone-starter-material-library/
+```
+
+### 第 4 步：做最小验证
+
+验证方式很简单：
+
+- 打开 `/.claude/skills/writing-clone-starter/SKILL.md`
+- 打开 `/02_素材库/writing-clone-starter-material-library/README.md`
+- 确认这两个路径都存在
+
+只要这两块在，仓库结构就对了。
+
+---
+
+## 安装方式 B：把仓库链接直接丢给你的 Agent
+
+这是我更推荐的安装方式。
+
+很多用户不是自己手动 copy，而是会把 GitHub 链接直接发给 Agent，让 Agent 帮自己装。这个仓库就是按这种场景写的。
+
+你可以直接把下面这段 prompt 复制给你的 Agent：
+
+```text
+请帮我把这个仓库安装到我当前工作区：
+https://github.com/zjp1997720/writing-clone-starter
+
+安装要求：
+
+1. clone 这个仓库到临时目录，不要直接污染我当前工作区
+2. 只把下面两块内容安装到我当前工作区：
+   - .claude/skills/writing-clone-starter/
+   - 02_素材库/writing-clone-starter-material-library/
+3. 如果我当前工作区里没有 .claude/skills/ 或 02_素材库/，请直接创建
+4. 保持这两个相对路径原样，不要自作主张改成别的目录名
+5. 安装完成后，请检查：
+   - .claude/skills/writing-clone-starter/SKILL.md 是否存在
+   - 02_素材库/writing-clone-starter-material-library/README.md 是否存在
+6. 最后告诉我：
+   - 你安装到了哪些路径
+   - 是否发现冲突文件
+   - 现在我可以怎样开始使用
+```
+
+如果你的 Agent 足够靠谱，这段 prompt 已经足够把仓库装好。
+
+---
+
+## 安装完成后怎么用
+
+### 默认用法：强文章模式
+
+你直接说：
+
+```text
+帮我写一篇关于 AI 内容获客的文章
+```
+
+或者：
+
+```text
+写一篇文章，主题是为什么很多人做内容很努力，最后却没有业务闭环
+```
+
+这时 starter 会优先按**强文章模式**理解，然后在 4 个原型里做路由。
+
+### 指定作者：高拟态模式
+
+你可以这样说：
+
+```text
+像 Dan Koe 那样写一篇关于一人公司内容策略的文章
+```
+
+```text
+按粥左罗的方向写一篇关于普通人做内容获客的文章
+```
+
+```text
+用刘润的方向写一篇关于小老板交易结构的文章
+```
+
+### 如果主题超出作者带宽会发生什么
+
+它不会硬装像。
+
+它会提醒你这个题已经超出该作者的原生带宽，然后自动回到强文章模式。
+
+---
+
+## 你大概会得到什么输出
+
+默认情况下，最重要的交付是：
+
+- `response.md`：正文成品
+
+说明性材料通常会放在：
+
+- `run_summary.md`：模式选择、带宽判断、降级原因等辅助说明
+
+你可以把它理解成：
+
+- `response.md` 是给读者看的
+- `run_summary.md` 是给你自己和维护者看的
+
+---
+
+## 成熟度说明
+
+这部分我不想藏着掖着，直接写清楚。
+
+当前 6 个内置作者的成熟度并不完全相同：
+
+- **Dan Koe、粥左罗**：更成熟
+- **Justin Welsh**：已经到可试用 draft 水位
+- **刘润、梁宁、薛辉**：在各自核心带宽内可用，但更窄
+
+这不影响你安装和使用，只影响你对“像到什么程度”的预期。
+
+---
+
+## 如果你是维护者，而不是普通用户
+
+你可能还会关心两件事：
+
+1. **怎么新增或更新一个作者 profile**
+2. **怎么验证一个 profile 到底稳不稳**
+
+那你应该继续看：
+
+- `references/profile-distillation/`
+- `references/profile-probe/`
+
+普通用户先不用碰这两块。
+
+---
+
+## 最后你该先看哪 3 个文件
+
+如果你刚拿到仓库，只看这 3 个文件就够了：
+
+1. `/.claude/skills/writing-clone-starter/SKILL.md`
+2. `/.claude/skills/writing-clone-starter/README.md`
+3. `/02_素材库/writing-clone-starter-material-library/README.md`
+
+看完这三个，你就会知道：
+
+- 这是什么
+- 它怎么工作
+- 它从哪儿取料
+- 你该怎么开始用
+
+---
 
 ## License
 
