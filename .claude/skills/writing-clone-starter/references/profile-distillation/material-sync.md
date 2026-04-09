@@ -5,7 +5,7 @@
 这份文件负责保证：
 
 - 生成人物 profile 时，不只产出 profile 资产
-- 还会同步把该人物相关的高价值素材沉淀进 Obsidian 素材库
+- 还会同步把该人物相关的高价值素材沉淀进统一素材库
 
 否则后续 starter 真正写作时，仍然会出现“有 profile，没素材”的断层。
 
@@ -20,7 +20,7 @@
 默认优先按下面顺序走：
 
 1. 侦察模块确定人物和公开来源范围
-2. 优先用 `web-clipper` 把文章抓到本地 / Obsidian
+2. 优先用 `web-clipper` 把文章抓到本地统一素材库输入面
 3. 优先用 `content-goldmine-gemini` 把本地文章拆进素材库
 4. 再用 profile-distillation 模块生成 profile 资产和 `source-ledger.md`
 
@@ -81,6 +81,7 @@
 - 素材落库要和 profile 资产互相引用，不能两边各写一套
 - 如果某个 worldview / signal 主要依赖某篇长文，这篇长文应该在素材库可回找
 - 如果某个 snippet / move 主要来自已拆出的标题、开头、结构碎片，它也应该能回找
+- `source-index.md` 里保留旧路径是为了迁移追溯，不代表 starter 运行时还依赖那些旧路径
 
 ## 最低验收
 

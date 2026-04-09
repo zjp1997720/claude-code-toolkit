@@ -22,7 +22,7 @@
 
 - 用户只是想写一篇文章
 - 用户只是想切到已有作者方向写一稿
-- 用户只是想继续补普通素材库，而不是蒸馏人物 profile
+- 用户只是想继续补统一素材库里的常规素材，而不是蒸馏人物 profile
 
 这些情况应该继续走 starter 的正常写作路径，而不是进这个重模块。
 
@@ -41,6 +41,8 @@
 1. `references/built-in-profiles/<author-id>/` 下的正式 profile 资产
 2. `source-ledger.md`
 3. `02_素材库/writing-clone-starter-material-library/` 下的同步素材资产
+
+这里的统一素材库就是 starter 唯一正式外部材料面，不再假定还存在并行的“普通素材库”或其他分散依赖。
 
 ## 默认执行思路
 
